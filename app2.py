@@ -50,7 +50,7 @@ def image_to_base64(image):
 def read_root():
     return {"message": "Welcome to Live Stream Frame and Audio Extractor API."}
 
-@app.get("/extract")
+@app.post("/extract")
 def extract_frames_and_audio(data: StreamURL):
     # Fetch the best quality stream URL
     streams = streamlink.streams(data.stream_url)
