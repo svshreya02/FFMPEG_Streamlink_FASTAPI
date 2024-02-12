@@ -8,6 +8,7 @@ from io import BytesIO
 from dotenv import load_dotenv
 import os
 from openai import OpenAI
+from pydantic import BaseModel
 
 
 # Load environment variables
@@ -19,6 +20,10 @@ if not OpenAI.api_key:
 
 # Create a FastAPI instance
 app = FastAPI()
+
+# Define a Pydantic model to specify the structure of the request body
+class StreamURL(BaseModel):
+    stream_url: str
 
 # Function to execute FFmpeg command and capture output
 def execute_ffmpeg_command(command):
@@ -46,9 +51,9 @@ def read_root():
     return {"message": "Welcome to Live Stream Frame and Audio Extractor API."}
 
 @app.get("/extract")
-def extract_frames_and_audio(stream_url: str):
+def extract_frames_and_audio(data: StreamURL):
     # Fetch the best quality stream URL
-    streams = streamlink.streams(stream_url)
+    streams = streamlink.streams(data.stream_url)
     if "best" in streams:
         stream_url = streams["best"].url
 
